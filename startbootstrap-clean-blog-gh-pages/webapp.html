@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Click The Box Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      height: 100vh;
+    }
+
+    h1 {
+      margin: 20px;
+    }
+
+    #gameArea {
+      position: relative;
+      width: 90vw;
+      height: 60vh;
+      border: 3px solid #333;
+      background-color: #fff;
+      overflow: hidden;
+    }
+
+    #box {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    #scoreBoard {
+      margin: 10px;
+      font-size: 1.2em;
+    }
+
+    #startBtn {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+
+    #startBtn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Click the Box!</h1>
+  <div id="scoreBoard">Score: 0 | Time Left: 30s</div>
+  <button id="startBtn" onclick="startGame()">Start Game</button>
+  <div id="gameArea">
+    <div id="box" onclick="clickBox()"></div>
+  </div>
+
+  <script>
+    const box = document.getElementById('box');
+    const gameArea = document.getElementById('gameArea');
+    const scoreBoard = document.getElementById('scoreBoard');
+    const startBtn = document.getElementById('startBtn');
+
+    let score = 0;
+    let timeLeft = 30;
+    let timer;
+    let gameRunning = false;
+
+    function moveBox() {
+      const areaWidth = gameArea.clientWidth - box.clientWidth;
+      const areaHeight = gameArea.clientHeight - box.clientHeight;
+      const x = Math.random() * areaWidth;
+      const y = Math.random() * areaHeight;
+      box.style.left = `${x}px`;
+      box.style.top = `${y}px`;
+    }
+
+    function clickBox() {
+      if (!gameRunning) return;
+      score++;
+      scoreBoard.textContent = `Score: ${score} | Time Left: ${timeLeft}s`;
+      moveBox();
+    }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 30;
+      gameRunning = true;
+      scoreBoard.textContent = `Score: ${score} | Time Left: ${timeLeft}s`;
+      moveBox();
+      box.style.display = 'block';
+      startBtn.disabled = true;
+
+      timer = setInterval(() => {
+        timeLeft--;
+        scoreBoard.textContent = `Score: ${score} | Time Left: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame() {
+      clearInterval(timer);
+      gameRunning = false;
+      box.style.display = 'none';
+      startBtn.disabled = false;
+      scoreBoard.textContent = `⏰ Time's up! Final Score: ${score}`;
+    }
+  </script>
+</body>
+</html>
+
